@@ -15,20 +15,33 @@ repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
+
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api("org.apache.commons:commons-math3:3.6.1")
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("com.google.guava:guava:28.1-jre")
+    implementation("org.apache.kafka:kafka-streams:2.3.0")
+    implementation("org.apache.kafka:kafka-clients:2.3.0")
 
     // Use JUnit Jupiter API for testing.
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
 
     // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
+
+    // lombok
+    implementation("org.projectlombok:lombok:1.18.12")
+    annotationProcessor("org.projectlombok:lombok:1.18.12")
+
+    testImplementation("org.projectlombok:lombok:1.18.12")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.12")
+
+    testImplementation("org.assertj:assertj-core:3.15.0")
 }
 
 val test by tasks.getting(Test::class) {
