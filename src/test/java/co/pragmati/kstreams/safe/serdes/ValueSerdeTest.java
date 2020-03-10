@@ -2,6 +2,7 @@ package co.pragmati.kstreams.safe.serdes;
 
 import co.pragmati.kstreams.safe.containers.ValueContainer;
 import co.pragmati.kstreams.safe.stubs.SampleEvent;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 public class ValueSerdeTest {
 
+    private final ObjectMapper MAPPER = JacksonJsonMapper.withDefaults();
     private final ValueSerde<SampleEvent> eventValueSerde = ValueSerde.of(JacksonJsonSerde.forClass(SampleEvent.class));
 
     @Test

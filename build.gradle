@@ -15,28 +15,36 @@ repositories {
 ext {
     junitJupiterVersion = '5.5.2'
     lombokVersion = '1.18.4'
+    logbackVersion = '1.2.3'
+    kafkaStreamsVersion = '2.4.0'
+    assertjVersion = '3.15.0'
 }
 
 dependencies {
 
-    implementation "org.apache.kafka:kafka-streams:2.4.0"
-    implementation "org.apache.kafka:kafka-clients:2.4.0"
+    implementation "org.apache.kafka:kafka-streams:${kafkaStreamsVersion}"
+    implementation "org.apache.kafka:kafka-clients:${kafkaStreamsVersion}"
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     // logging
     compile "org.slf4j:slf4j-api:1.7.25"
-    compile "ch.qos.logback:logback-classic:1.2.3"
-    compile "ch.qos.logback:logback-core:1.2.3"
+    compile "ch.qos.logback:logback-classic:${logbackVersion}"
+    compile "ch.qos.logback:logback-core:${logbackVersion}"
 
     // testing
-    testCompile "org.assertj:assertj-core:3.15.0"
+    testCompile "org.assertj:assertj-core:${assertjVersion}"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-migrationsupport:${junitJupiterVersion}"
 
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+
+    testImplementation "org.mockito:mockito-core:3.3.0"
+
+    testImplementation "com.fasterxml.jackson.core:jackson-databind:2.10.3"
+
 }
 
 lombok {
