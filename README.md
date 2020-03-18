@@ -5,6 +5,8 @@ Safe Kafka Streams
 
 [![codecov](https://codecov.io/gh/pragmatico/safe-kafka-streams/branch/master/graph/badge.svg)](https://codecov.io/gh/pragmatico/safe-kafka-streams)
 
+Read the docs: https://readthedocs.org/projects/safe-kafka-streams/
+
 References:
 
 https://dzone.com/articles/exception-handling-in-java-streams
