@@ -2,7 +2,6 @@
 .gradle
 
 gradlew.bat
-gradle/wrapper/gradle-wrapper.jar
 
 # Ignore Gradle build output directory
 build
