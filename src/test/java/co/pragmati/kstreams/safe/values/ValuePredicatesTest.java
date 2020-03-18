@@ -1,4 +1,4 @@
-package co.pragmati.kstreams.safe.containers;
+package co.pragmati.kstreams.safe.values;
 
 import org.junit.jupiter.api.Test;
 

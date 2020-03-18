@@ -1,6 +1,6 @@
 package co.pragmati.kstreams.safe.serdes;
 
-import co.pragmati.kstreams.safe.containers.ValueContainer;
+import co.pragmati.kstreams.safe.values.SafeValue;
 import lombok.AllArgsConstructor;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
@@ -15,7 +15,7 @@ import java.util.Map;
  * @param <T>
  */
 @AllArgsConstructor(staticName = "of")
-public class ValueSerde<T> implements Serializer<ValueContainer<T>>, Deserializer<ValueContainer<T>>, Serde<ValueContainer<T>> {
+public class ValueSerde<T> implements Serializer<SafeValue<T>>, Deserializer<SafeValue<T>>, Serde<SafeValue<T>> {
 
     private Serde<T> serde;
 
@@ -25,12 +25,12 @@ public class ValueSerde<T> implements Serializer<ValueContainer<T>>, Deserialize
     }
 
     @Override
-    public ValueContainer<T> deserialize(final String topic, final byte[] data) {
-        return ValueContainer.of(data).map(d -> serde.deserializer().deserialize(null, data));
+    public SafeValue<T> deserialize(final String topic, final byte[] data) {
+        return SafeValue.of(data).map(d -> serde.deserializer().deserialize(null, data));
     }
 
     @Override
-    public byte[] serialize(final String topic, final ValueContainer<T> data) {
+    public byte[] serialize(final String topic, final SafeValue<T> data) {
         return data.map(v -> serde.serializer().serialize(null, v)).getValue();
     }
 
@@ -40,12 +40,12 @@ public class ValueSerde<T> implements Serializer<ValueContainer<T>>, Deserialize
     }
 
     @Override
-    public Serializer<ValueContainer<T>> serializer() {
+    public Serializer<SafeValue<T>> serializer() {
         return this;
     }
 
     @Override
-    public Deserializer<ValueContainer<T>> deserializer() {
+    public Deserializer<SafeValue<T>> deserializer() {
         return this;
     }
 }

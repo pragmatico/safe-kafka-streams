@@ -1,6 +1,6 @@
 package co.pragmati.kstreams.safe.serdes;
 
-import co.pragmati.kstreams.safe.containers.ValueContainer;
+import co.pragmati.kstreams.safe.values.SafeValue;
 import co.pragmati.kstreams.safe.stubs.SampleEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;

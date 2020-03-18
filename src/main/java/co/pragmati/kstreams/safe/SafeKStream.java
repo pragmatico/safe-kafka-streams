@@ -25,7 +25,7 @@ import org.apache.kafka.streams.kstream.ValueTransformerWithKeySupplier;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
 
-public interface SafeKStream<K, V> extends KStream<K, V> {
+public interface SafeKStream<K, V> {
 
     SafeKStream<K, V> filter(final Predicate<? super K, ? super V> predicate);
 
@@ -92,13 +92,11 @@ public interface SafeKStream<K, V> extends KStream<K, V> {
 
     SafeKStream<K, V> through(final String topic);
 
-    SafeKStream<K, V> through(final String topic,
-                                                           final Produced<K, V> produced);
+    SafeKStream<K, V> through(final String topic, final Produced<K, V> produced);
 
     void to(final String topic);
 
-    void to(final String topic,
-            final Produced<K, V> produced);
+    void to(final String topic, final Produced<K, V> produced);
 
     void to(final TopicNameExtractor<K, V> topicExtractor);
 
@@ -161,19 +159,10 @@ public interface SafeKStream<K, V> extends KStream<K, V> {
     KGroupedStream<K, V> groupByKey();
 
 
-    @Deprecated
-    KGroupedStream<K, V> groupByKey(final Serialized<K, V> serialized);
-
-
     KGroupedStream<K, V> groupByKey(final Grouped<K, V> grouped);
 
 
     <KR> KGroupedStream<KR, V> groupBy(final KeyValueMapper<? super K, ? super V, KR> selector);
-
-
-    @Deprecated
-    <KR> KGroupedStream<KR, V> groupBy(final KeyValueMapper<? super K, ? super V, KR> selector,
-                                       final Serialized<KR, V> serialized);
 
 
     <KR> KGroupedStream<KR, V> groupBy(final KeyValueMapper<? super K, ? super V, KR> selector,
@@ -183,13 +172,6 @@ public interface SafeKStream<K, V> extends KStream<K, V> {
     <VO, VR> SafeKStream<K, VR> join(final SafeKStream<K, VO> otherStream,
                                                                   final ValueJoiner<? super V, ? super VO, ? extends VR> joiner,
                                                                   final JoinWindows windows);
-
-
-    @Deprecated
-    <VO, VR> SafeKStream<K, VR> join(final SafeKStream<K, VO> otherStream,
-                                                                  final ValueJoiner<? super V, ? super VO, ? extends VR> joiner,
-                                                                  final JoinWindows windows,
-                                                                  final Joined<K, V, VO> joined);
 
 
     <VO, VR> SafeKStream<K, VR> join(final SafeKStream<K, VO> otherStream,
@@ -203,13 +185,6 @@ public interface SafeKStream<K, V> extends KStream<K, V> {
                                                                       final JoinWindows windows);
 
 
-    @Deprecated
-    <VO, VR> SafeKStream<K, VR> leftJoin(final SafeKStream<K, VO> otherStream,
-                                                                      final ValueJoiner<? super V, ? super VO, ? extends VR> joiner,
-                                                                      final JoinWindows windows,
-                                                                      final Joined<K, V, VO> joined);
-
-
     <VO, VR> SafeKStream<K, VR> leftJoin(final SafeKStream<K, VO> otherStream,
                                                                       final ValueJoiner<? super V, ? super VO, ? extends VR> joiner,
                                                                       final JoinWindows windows,
@@ -219,13 +194,6 @@ public interface SafeKStream<K, V> extends KStream<K, V> {
     <VO, VR> SafeKStream<K, VR> outerJoin(final SafeKStream<K, VO> otherStream,
                                                                        final ValueJoiner<? super V, ? super VO, ? extends VR> joiner,
                                                                        final JoinWindows windows);
-
-
-    @Deprecated
-    <VO, VR> SafeKStream<K, VR> outerJoin(final SafeKStream<K, VO> otherStream,
-                                                                       final ValueJoiner<? super V, ? super VO, ? extends VR> joiner,
-                                                                       final JoinWindows windows,
-                                                                       final Joined<K, V, VO> joined);
 
 
     <VO, VR> SafeKStream<K, VR> outerJoin(final SafeKStream<K, VO> otherStream,

@@ -1,4 +1,4 @@
-package co.pragmati.kstreams.safe.containers;
+package co.pragmati.kstreams.safe.values;
 
 import lombok.NoArgsConstructor;
 
@@ -13,11 +13,11 @@ import static lombok.AccessLevel.PRIVATE;
 public class ValuePredicates {
 
     @SuppressWarnings("squid:S1172")
-    public static <K, V> boolean isError(K key, ValueContainer<V> value) {
+    public static <K, V> boolean isError(K key, SafeValue<V> value) {
         return value.failed();
     }
 
-    public static <K, V> boolean isSuccess(K key, ValueContainer<V> value) {
+    public static <K, V> boolean isSuccess(K key, SafeValue<V> value) {
         return !isError(key, value);
     }
 }
