@@ -1,4 +1,4 @@
-package co.pragmati.kstreams.safe.values;
+package co.pragmati.kstreams.safe.keyvalues;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,15 +11,15 @@ public class ValuePredicatesTest {
 
     @Test
     public void testIsSuccess() {
-        final boolean isSuccess = ValuePredicates.isSuccess(key, ValueContainer.of(JSON));
-        final boolean isError = ValuePredicates.isError(key, ValueContainer.of(JSON));
+        final boolean isSuccess = ValuePredicates.isSuccess(key, SafeValue.of(JSON));
+        final boolean isError = ValuePredicates.isError(key, SafeValue.of(JSON));
         assertThat(isSuccess).isTrue();
         assertThat(isError).isFalse();
     }
 
     @Test
     public void testIsError() {
-        final ValueContainer<byte[]> value = ValueContainer.of(JSON).map(a -> {
+        final SafeValue<byte[]> value = SafeValue.of(JSON).map(a -> {
             throw new RuntimeException("wowww");
         });
         final boolean isSuccess = ValuePredicates.isSuccess(key, value);

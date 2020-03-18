@@ -1,4 +1,4 @@
-package co.pragmati.kstreams.safe.values;
+package co.pragmati.kstreams.safe.keyvalues;
 
 import lombok.NoArgsConstructor;
 

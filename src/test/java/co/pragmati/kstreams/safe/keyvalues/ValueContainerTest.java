@@ -1,4 +1,4 @@
-package co.pragmati.kstreams.safe.values;
+package co.pragmati.kstreams.safe.keyvalues;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ public class ValueContainerTest {
 
     @Test
     public void testCreateValueContainer() {
-        final ValueContainer<byte[]> v = ValueContainer.of(JSON);
+        final SafeValue<byte[]> v = SafeValue.of(JSON);
         assertThat(v).isNotNull();
         assertThat(v.failed()).isFalse();
         assertThat(v.getValue()).isEqualTo(JSON);
@@ -20,14 +20,14 @@ public class ValueContainerTest {
 
     @Test
     public void testMapValue() {
-        final ValueContainer<byte[]> v = ValueContainer.of(JSON);
+        final SafeValue<byte[]> v = SafeValue.of(JSON);
         assertThat(v.map(a -> a.toString().concat("-modified")).getValue()).isEqualTo(JSON.toString().concat("-modified"));
     }
 
     @Test
     public void testMappingError() {
-        final ValueContainer<byte[]> v = ValueContainer.of(JSON);
-        final ValueContainer<byte[]> v2 = v.map(a -> {
+        final SafeValue<byte[]> v = SafeValue.of(JSON);
+        final SafeValue<byte[]> v2 = v.map(a -> {
             throw new RuntimeException("wowww");
         });
         assertThat(v2.failed()).isTrue();
@@ -38,7 +38,7 @@ public class ValueContainerTest {
     @Test
     public void testIs() {
         final String expectedText = "hello";
-        final ValueContainer<String> v = ValueContainer.of(JSON).map(notUsed -> expectedText);
+        final SafeValue<String> v = SafeValue.of(JSON).map(notUsed -> expectedText);
         assertThat(v.is(a -> a == a)).isTrue();
         assertThat(v.is(a -> a == "invalid")).isFalse();
     }
@@ -46,7 +46,7 @@ public class ValueContainerTest {
     @Test
     public void testIsWhenPredicateFails() {
         final String expectedText = "hello";
-        final ValueContainer<String> v = ValueContainer.of(JSON).map(notUsed -> expectedText);
+        final SafeValue<String> v = SafeValue.of(JSON).map(notUsed -> expectedText);
         assertThat(v.is(a -> {
             throw new RuntimeException("yuhuu");
         })).isFalse();
@@ -54,7 +54,7 @@ public class ValueContainerTest {
 
     @Test
     public void testIsWhenFailedValue() {
-        final ValueContainer<byte[]> v = ValueContainer.of(JSON).map(a -> {
+        final SafeValue<byte[]> v = SafeValue.of(JSON).map(a -> {
             throw new RuntimeException("wowww");
         });
         assertThat(v.is(a -> a == a)).isFalse();

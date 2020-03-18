@@ -1,6 +1,6 @@
 package co.pragmati.kstreams.safe.serdes;
 
-import co.pragmati.kstreams.safe.values.SafeValue;
+import co.pragmati.kstreams.safe.keyvalues.SafeValue;
 import lombok.AllArgsConstructor;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;

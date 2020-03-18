@@ -1,6 +1,6 @@
 package co.pragmati.kstreams.safe.serdes;
 
-import co.pragmati.kstreams.safe.values.SafeValue;
+import co.pragmati.kstreams.safe.keyvalues.SafeValue;
 import co.pragmati.kstreams.safe.stubs.SampleEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ public class ValueSerdeTest {
     @Test
     public void testDeserializationSuccessful() {
         final byte[] json = SampleEvent.jsonSample();
-        final ValueContainer<SampleEvent> v = eventValueSerde.deserialize(null, json);
+        final SafeValue<SampleEvent> v = eventValueSerde.deserialize(null, json);
         assertThat(v).isNotNull();
         assertThat(v.getValue().getId()).isEqualTo(SampleEvent.EXPECTED_ID);
         assertThat(v.getValue().getName()).isEqualTo(SampleEvent.EXPECTED_NAME);
@@ -29,13 +29,13 @@ public class ValueSerdeTest {
     @Test
     public void testDeserializationError() {
         final byte[] json = "{invalid!!!}".getBytes(StandardCharsets.UTF_8);
-        final ValueContainer<SampleEvent> v = eventValueSerde.deserialize(null, json);
+        final SafeValue<SampleEvent> v = eventValueSerde.deserialize(null, json);
         assertThat(v.failed()).isTrue();
     }
 
     @Test
     public void testSerializeOutputSuccessfully() throws IOException {
-        final ValueContainer<SampleEvent> input = ValueContainer.of("".getBytes()).map(a -> SampleEvent.sample());
+        final SafeValue<SampleEvent> input = SafeValue.of("".getBytes()).map(a -> SampleEvent.sample());
         final byte[] output = eventValueSerde.serialize(null, input);
         assertThat(output).isNotNull();
         final SampleEvent ev = MAPPER.readValue(output, SampleEvent.class);

@@ -1,8 +1,8 @@
 package co.pragmati.kstreams.safe;
 
-import co.pragmati.kstreams.safe.values.SafeKey;
-import co.pragmati.kstreams.safe.values.SafeKeyValue;
-import co.pragmati.kstreams.safe.values.SafeValue;
+import co.pragmati.kstreams.safe.keyvalues.SafeKey;
+import co.pragmati.kstreams.safe.keyvalues.SafeKeyValue;
+import co.pragmati.kstreams.safe.keyvalues.SafeValue;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ForeachAction;
 import org.apache.kafka.streams.kstream.GlobalKTable;
@@ -48,6 +48,10 @@ public class SafeKStreamImpl<K, V> implements SafeKStream<K, V> {
         // TODO: is it safe to return nulls if error
         // write log warning if error & throw exception?
         return kstream.map((k, v) -> KeyValue.pair(k.getKey(), v.getValue()));
+    }
+
+    public KStream<SafeKey<K>, SafeValue<V>> unwrap() {
+        return kstream.map((k, v) -> KeyValue.pair(k, v));
     }
 
     @Override
@@ -142,27 +146,27 @@ public class SafeKStreamImpl<K, V> implements SafeKStream<K, V> {
 
     @Override
     public void print(Printed<K, V> printed) {
-
+        unsafe().print(printed);
     }
 
     @Override
     public void foreach(ForeachAction<? super K, ? super V> action) {
-
+        kstream.foreach((k, v) -> SafeKeyValue.pair(k, v).foreach(action));
     }
 
     @Override
     public void foreach(ForeachAction<? super K, ? super V> action, Named named) {
-
+        kstream.foreach((k, v) -> SafeKeyValue.pair(k, v).foreach(action), named);
     }
 
     @Override
     public SafeKStream<K, V> peek(ForeachAction<? super K, ? super V> action) {
-        return null;
+        return safe(kstream.peek((k, v) -> SafeKeyValue.pair(k, v).peek(action)));
     }
 
     @Override
     public SafeKStream<K, V> peek(ForeachAction<? super K, ? super V> action, Named named) {
-        return null;
+        return safe(kstream.peek((k, v) -> SafeKeyValue.pair(k, v).peek(action), named));
     }
 
     @Override
@@ -177,42 +181,44 @@ public class SafeKStreamImpl<K, V> implements SafeKStream<K, V> {
 
     @Override
     public SafeKStream<K, V> merge(SafeKStream<K, V> stream) {
-        return null;
+        return safe(kstream.merge(stream.unwrap()));
     }
 
     @Override
     public SafeKStream<K, V> merge(SafeKStream<K, V> stream, Named named) {
-        return null;
+        return safe(kstream.merge(stream.unwrap(), named));
     }
 
     @Override
     public SafeKStream<K, V> through(String topic) {
-        return null;
+        this.unsafe().through(topic);
+        return safe(kstream);
     }
 
     @Override
     public SafeKStream<K, V> through(String topic, Produced<K, V> produced) {
-        return null;
+        this.unsafe().through(topic, produced);
+        return safe(kstream);
     }
 
     @Override
     public void to(String topic) {
-
+        this.unsafe().to(topic);
     }
 
     @Override
     public void to(String topic, Produced<K, V> produced) {
-
+        this.unsafe().to(topic, produced);
     }
 
     @Override
     public void to(TopicNameExtractor<K, V> topicExtractor) {
-
+        this.unsafe().to(topicExtractor);
     }
 
     @Override
     public void to(TopicNameExtractor<K, V> topicExtractor, Produced<K, V> produced) {
-
+        this.unsafe().to(topicExtractor, produced);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package co.pragmati.kstreams.safe;
 
+import co.pragmati.kstreams.safe.keyvalues.SafeKey;
+import co.pragmati.kstreams.safe.keyvalues.SafeValue;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ForeachAction;
 import org.apache.kafka.streams.kstream.GlobalKTable;
@@ -14,7 +16,6 @@ import org.apache.kafka.streams.kstream.Named;
 import org.apache.kafka.streams.kstream.Predicate;
 import org.apache.kafka.streams.kstream.Printed;
 import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.kstream.Serialized;
 import org.apache.kafka.streams.kstream.StreamJoined;
 import org.apache.kafka.streams.kstream.TransformerSupplier;
 import org.apache.kafka.streams.kstream.ValueJoiner;
@@ -26,6 +27,10 @@ import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
 
 public interface SafeKStream<K, V> {
+
+    KStream<K, V> unsafe();
+
+    KStream<SafeKey<K>, SafeValue<V>> unwrap();
 
     SafeKStream<K, V> filter(final Predicate<? super K, ? super V> predicate);
 

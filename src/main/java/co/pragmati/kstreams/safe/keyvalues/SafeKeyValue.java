@@ -1,21 +1,18 @@
-package co.pragmati.kstreams.safe.values;
+package co.pragmati.kstreams.safe.keyvalues;
 
-import co.pragmati.kstreams.safe.SafeKStream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.kstream.ForeachAction;
 import org.apache.kafka.streams.kstream.KeyValueMapper;
-import org.apache.kafka.streams.kstream.Named;
 import org.apache.kafka.streams.kstream.Predicate;
 import org.apache.kafka.streams.kstream.ValueMapperWithKey;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
@@ -96,6 +93,19 @@ public class  SafeKeyValue<K, V> {
         } catch (Exception t) {
             return Arrays.asList(this.<K, VR>passThrough(t).value);
         }
+    }
+
+    public void foreach(ForeachAction<? super K, ? super V> action) {
+        exception.ifPresentOrElse(
+                e -> log.warn("foreach not executed for original key: {} due to {}", new String(safeKey.getSource()), e.getMessage()),
+                () -> action.apply(safeKey.getKey(), safeValue.getValue()));
+    }
+
+    public KeyValue<SafeKey<K>, SafeValue<V>> peek(ForeachAction<? super K, ? super V> action) {
+        exception.ifPresentOrElse(
+                e -> log.warn("peek not executed for original key: {} due to {}", new String(safeKey.getSource()), e.getMessage()),
+                () -> action.apply(safeKey.getKey(), safeValue.getValue()));
+        return KeyValue.pair(safeKey, safeValue);
     }
 
     private <KR, VR> KeyValue<SafeKey<KR>, SafeValue<VR>> passThrough(final Exception t) {
