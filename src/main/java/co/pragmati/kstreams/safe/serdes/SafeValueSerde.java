@@ -9,13 +9,13 @@ import org.apache.kafka.common.serialization.Serializer;
 import java.util.Map;
 
 /**
- * Parameterised Serde that provides safe serialization/deserialization from/to ValueContainer
+ * Parameterised Serde that provides safe serialization/deserialization from/to SafeValue
  * parameterised types
  *
  * @param <T>
  */
 @AllArgsConstructor(staticName = "of")
-public class ValueSerde<T> implements Serializer<SafeValue<T>>, Deserializer<SafeValue<T>>, Serde<SafeValue<T>> {
+public class SafeValueSerde<T> implements Serializer<SafeValue<T>>, Deserializer<SafeValue<T>>, Serde<SafeValue<T>> {
 
     private Serde<T> serde;
 

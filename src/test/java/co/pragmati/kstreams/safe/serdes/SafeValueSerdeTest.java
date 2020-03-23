@@ -12,15 +12,15 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-public class ValueSerdeTest {
+public class SafeValueSerdeTest {
 
     private final ObjectMapper MAPPER = JacksonJsonMapper.withDefaults();
-    private final ValueSerde<SampleEvent> eventValueSerde = ValueSerde.of(JacksonJsonSerde.forClass(SampleEvent.class));
+    private final SafeValueSerde<SampleEvent> eventSafeValueSerde = SafeValueSerde.of(JacksonJsonSerde.forClass(SampleEvent.class));
 
     @Test
     public void testDeserializationSuccessful() {
         final byte[] json = SampleEvent.jsonSample();
-        final SafeValue<SampleEvent> v = eventValueSerde.deserialize(null, json);
+        final SafeValue<SampleEvent> v = eventSafeValueSerde.deserialize(null, json);
         assertThat(v).isNotNull();
         assertThat(v.getValue().getId()).isEqualTo(SampleEvent.EXPECTED_ID);
         assertThat(v.getValue().getName()).isEqualTo(SampleEvent.EXPECTED_NAME);
@@ -29,14 +29,14 @@ public class ValueSerdeTest {
     @Test
     public void testDeserializationError() {
         final byte[] json = "{invalid!!!}".getBytes(StandardCharsets.UTF_8);
-        final SafeValue<SampleEvent> v = eventValueSerde.deserialize(null, json);
+        final SafeValue<SampleEvent> v = eventSafeValueSerde.deserialize(null, json);
         assertThat(v.failed()).isTrue();
     }
 
     @Test
     public void testSerializeOutputSuccessfully() throws IOException {
         final SafeValue<SampleEvent> input = SafeValue.of("".getBytes()).map(a -> SampleEvent.sample());
-        final byte[] output = eventValueSerde.serialize(null, input);
+        final byte[] output = eventSafeValueSerde.serialize(null, input);
         assertThat(output).isNotNull();
         final SampleEvent ev = MAPPER.readValue(output, SampleEvent.class);
         assertThat(ev).isEqualTo(SampleEvent.sample());
@@ -44,16 +44,16 @@ public class ValueSerdeTest {
 
     @Test
     public void testClose() {
-        assertThat(catchThrowable(() -> ValueSerde.of(JacksonJsonSerde.forClass(SampleEvent.class)).close())).doesNotThrowAnyException();
+        assertThat(catchThrowable(() -> SafeValueSerde.of(JacksonJsonSerde.forClass(SampleEvent.class)).close())).doesNotThrowAnyException();
     }
 
     @Test
     public void testConfigure() {
-        assertThat(catchThrowable(() -> ValueSerde.of(JacksonJsonSerde.forClass(SampleEvent.class)).configure(Map.of(), true))).doesNotThrowAnyException();
+        assertThat(catchThrowable(() -> SafeValueSerde.of(JacksonJsonSerde.forClass(SampleEvent.class)).configure(Map.of(), true))).doesNotThrowAnyException();
     }
 
     @Test
     public void testGetSerializer() {
-        assertThat(eventValueSerde.serializer()).isEqualTo(eventValueSerde);
+        assertThat(eventSafeValueSerde.serializer()).isEqualTo(eventSafeValueSerde);
     }
 }

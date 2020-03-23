@@ -3,6 +3,7 @@ package co.pragmati.kstreams.safe;
 import co.pragmati.kstreams.safe.keyvalues.SafeKey;
 import co.pragmati.kstreams.safe.keyvalues.SafeKeyValue;
 import co.pragmati.kstreams.safe.keyvalues.SafeValue;
+import lombok.AllArgsConstructor;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ForeachAction;
 import org.apache.kafka.streams.kstream.GlobalKTable;
@@ -27,18 +28,14 @@ import org.apache.kafka.streams.kstream.ValueTransformerWithKeySupplier;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
 
+@AllArgsConstructor(staticName = "of")
 public class SafeKStreamImpl<K, V> implements SafeKStream<K, V> {
 
     private final KStream<SafeKey<K>, SafeValue<V>> kstream;
 
-    private SafeKStreamImpl(final KStream<SafeKey<K>, SafeValue<V>> kstream) {
-        this.kstream = kstream;
-    }
-
     // TODO: implement SafeKeyValueMapper, ... as a way to get a SafeKStream / SafeValueKStream ...
     // so it's possible to use a generic kstream and convert the kstream to a safeKstream type by applying a `map`
     // with one of the Safe/KeyValueMappers provided by the library
-
 
     private <K1, V1> SafeKStream<K1, V1> safe(final KStream<SafeKey<K1>, SafeValue<V1>> kstream) {
         return new SafeKStreamImpl(kstream);
