@@ -25,6 +25,7 @@ import java.util.Properties;
 
 import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 import static org.apache.kafka.streams.StreamsConfig.BOOTSTRAP_SERVERS_CONFIG;
+import static org.assertj.core.api.Assertions.*;
 
 public class SafeKStreamImplTest {
 
@@ -61,7 +62,7 @@ public class SafeKStreamImplTest {
             // topology
             SafeStreamsBuilder builder = new SafeStreamsBuilder();
             builder.stream(IN_TOPIC, SafeConsumed.with(Serdes.ByteArray(), eventJsonSerde))
-                    .to(OUT_TOPIC, Produced.with(Serdes.ByteArray(), eventJsonSerde));
+                    .to(OUT_TOPIC, SafeProduced.with(Serdes.ByteArray(), eventJsonSerde));
 
             Topology topology = builder.build();
 
@@ -73,7 +74,7 @@ public class SafeKStreamImplTest {
 
             // then
             TestOutputTopic<byte[], SampleEvent> outputTopic = testDriver.createOutputTopic(OUT_TOPIC, Serdes.ByteArray().deserializer(), eventJsonSerde.deserializer());
-            Assertions.assertThat(outputTopic.readKeyValue()).isEqualTo(KeyValue.pair(messageKey, message));
+            assertThat(outputTopic.readKeyValue()).isEqualTo(KeyValue.pair(messageKey, message));
             testDriver.close();
         }
 
